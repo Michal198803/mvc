@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block userActions %}
+{% if current_user %}
+<li class="active"><a href="home">Home</a></li>
+<li><a href="Income">Add Income</a></li>
+<li><a href="Expense">Add Expense</a></li>
+<li><a href="Balance">Show balance</a></li>
+<li><a href="Setup">Setup </a></li>
+{% else %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block css %}
+<link rel="stylesheet" href="css/main_style.css"/>{% endblock %}
+{% block userActions %}
+{% if current_user %}
+<li><a href="home">Home</a></li>
+<li><a href="Income">Add Income</a></li>
+<li><a href="Expense">Add Expense</a></li>
+<li><a href="Balance">Show balance</a></li>
+<li class="active"><a href="Setup">Setup </a></li>
+{% else %}
+
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-6 col-lg-6" style="padding-top: 25px; float: left; width: 100%">
+            <table class="table">
+                <tr>
+                    <td>User information</td>
+                    <td><a href="*">Edit</a></td>
+
+                </tr>
+                <tr>
+                    <td>Income list</td>
+                    <td><a href="*">Edit</a></td>
+                </tr>
+                <tr>
+                    <td>Expense list</td>
+                    <td><a href="*">Edit</a></td>
+                </tr>
+                <tr>
+                    <td>Payment method list</td>
+                    <td><a href="*">Edit</a></td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

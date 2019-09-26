@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+{% block validation %}{% endblock %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    {% block css %}
+    <link rel="stylesheet" href="css/style.css"/>
+    {% endblock %}
+    <meta charset="utf-8"/>
+    <title>Balance page</title>
+    <meta name="description" content="Setup page"/>
+    <meta name="keywords" content="css, login"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+    {% block addScript %}{% endblock %}
+
+</head>
+{% block toolBar %}
+<body>
+<div class="container">
+    <div class="col-lg-12">
+
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Finance Manager 2.0</a>
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target="#bs-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        {% endblock %}
+                        {% block userActions %}
+                        {% endblock %}
+                    </ul>
+                    {% if current_user %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+                    </ul>
+                    {% else %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="../Signup"><span class="glyphicon glyphicon-new-window"></span> Register</a></li>
+                        <li><a href="/Login"><span class="glyphicon glyphicon-log-in"></span> Log in</a></li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+    </div>
+
+
+    {% block content %}
+    <div class="col-lg-12">
+        <img src="img/finance.jpg" style="width:100%;">
+    </div>
+</div>
+{% endblock %}
+
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block css %}
+<link rel="stylesheet" href="css/main_style.css"/>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="js/donutChart.js"></script>
+
+
+{% endblock %}
+
+{% block userActions %}
+{% if current_user %}
+<li><a href="home">Home</a></li>
+<li><a href="Income">Add Income</a></li>
+<li><a href="Expense">Add Expense</a></li>
+<li class="active"><a href="Balance">Show balance</a></li>
+<li><a href="Setup">Setup </a></li>
+{% else %}
+{% endif %}
+{% endblock %}
+{% block content %}
+{% set income = '' %}
+{% set expense = 0 %}
+<div class="content_add" style="padding: 15px">
+</div>
+
+<div class="container">
+
+    <div class="row">
+
+        <form method="POST" action="show_balance">
+
+            <div id="custom" class="col-xs-12 col-md-3 col-lg-3" style="float: left; padding-right: 3% ">
+                <label>
+                    Custom begin date:
+                </label>
+                <input type="date" value={{balance.date}} name="dateBegin">
+                <label>
+                    Custom end date:
+                </label>
+                <input type="date" value={{balance.date}} name="dateEnd">
+            </div>
+            <div class="col-xs-12 col-md-3 col-lg-3" style="float: right; padding-right: 4%">
+                <label>Please select period: </label>
+                <select id="period" name="period" onchange="selectedValue()">
+                    <option name="period" value="1">Current month</option>
+                    <option name="period" value="2">Last month</option>
+                    <option name="period" value="3">This year</option>
+                    <option name="period" value="4">Custom</option>
+                </select>
+                <input type="submit" class="btn btn-primary btn-xs" value="show balance">
+            </div>
+        </form>
+        <script type="text/javascript" src="js/formManipulation.js"></script>
+
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-lg-6" style="padding-top: 25px; float: left; width: 100% ">
+            <table class="table" id="tableIncomes">
+                <tr>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Comment</th>
+                </tr>
+                {% for income in balance.incomes %}
+                <tr>
+                    <td>{{income.amount}}</td>
+                    <td>{{income.name}}</td>
+                    <td>{{income.date_of_income}}</td>
+                    <td>{{income.income_comment}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-6" style="float: left; width: 100%">
+        <label>Your income is: <span id="incomesValue"></span> </label>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6 col-lg-6" style="padding-top: 25px; float: left; width: 100%">
+            <table class="table" id="tableExpences">
+                <tr>
+                    <th>Amount</th>
+                    <th>Payment method</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Comment</th>
+                </tr>
+                {% for expense in balance.expenses %}
+                <tr>
+                    <td>{{expense.amount}}</td>
+                    <td>{{expense.name}}</td>
+                    <td>{{expense.date_of_expense}}</td>
+                    <td>{{expense.name2}}</td>
+                    <td>{{expense.expense_comment}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-6" style="float: left; width: 100%">
+        <label>Your expense is: <span id="expencesValue"></span> </label>
+    </div>
+    <div class="col-md-6 col-lg-6" style="float: left; width: 100%">
+        <label id="balance">Your balance is: <span id="balanceValue"></span> </label>
+    </div>
+    <script type="text/javascript" src="js/calc.js"></script>
+    <div class="row">
+        <div class="col-md-12 ">
+            <div id="donutchart"
+                 style="position: relative; height:40vh; width:80vw; padding-top: 40px; float: left"></div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
