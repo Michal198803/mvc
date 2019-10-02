@@ -1,4 +1,10 @@
 
+.flash {
+    padding-top: 5px;
+    padding-left: 18%;
+    padding-right: 18%;
+}
+
 #login {
     float: left;
     background-color: white;

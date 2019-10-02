@@ -17,7 +17,6 @@
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
     {% block addScript %}{% endblock %}
-
 </head>
 {% block toolBar %}
 <body>
@@ -55,17 +54,22 @@
                 </div>
             </div>
         </nav>
-
     </div>
-
-
     {% block content %}
     <div class="col-lg-12">
         <img src="img/finance.jpg" style="width:100%;">
     </div>
 </div>
-{% endblock %}
 
+{% endblock %}
+<div class="flash">
+    {% for message in flash_messages %}
+    <div class="alert alert-{{ message.type }}">
+        {{ message.body }}
+    </div>
+    {% endfor %}
+
+</div>
 
 </body>
 </html>
