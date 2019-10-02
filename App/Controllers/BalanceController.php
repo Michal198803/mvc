@@ -17,7 +17,7 @@ class BalanceController extends \Core\Controller
     public function createAction ()
     {
         $balance = new Balance($_POST);
-
+        $_SESSION['period'] = $balance->period;
         $balance->getDate();
         $balance->loadIncomes();
         $balance->loadExpence();

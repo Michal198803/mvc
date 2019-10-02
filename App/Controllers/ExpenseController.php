@@ -5,6 +5,8 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\Expense;
+use \App\Flash;
+
 
 class ExpenseController extends \Core\Controller
 {
@@ -30,7 +32,7 @@ class ExpenseController extends \Core\Controller
 
 
         if ($expense->save()) {
-
+            Flash::addMessage('Expense added successfully');
             $this->redirect('/Expense');
 
         } else {

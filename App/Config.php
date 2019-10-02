@@ -26,17 +26,18 @@ class Config
      * Database user
      * @var string
      */
+    //  const DB_USER = 'mich1988_finm';
     const DB_USER = 'root';
-
     /**
      * Database password
      * @var string
      */
+    //   const DB_PASSWORD = 'GreenLabrador1@';
     const DB_PASSWORD = '';
-
     /**
      * Show or hide error messages on screen
      * @var boolean
      */
     const SHOW_ERRORS = true;
 }
+

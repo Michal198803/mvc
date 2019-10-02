@@ -29,6 +29,7 @@ class Income extends \Core\Model
     public function preloadCategory ()
     {
         $id = $_SESSION['userId'];
+
         $query = "SELECT * FROM incomes_category_assigned_to_users WHERE user_id = '$id ' ";
 
         $db = static::getDB();

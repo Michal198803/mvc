@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\User;
-
+use \App\Flash;
 
 class SignupController extends \Core\Controller
 {
@@ -16,11 +16,11 @@ class SignupController extends \Core\Controller
 
     public function createAction ()
     {
-        var_dump($_POST);
+
         $user = new User($_POST);
 
         if ($user->save()) {
-
+            Flash::addMessage('Registration complete');
             $this->redirect('/login');
 
         } else {
@@ -28,7 +28,6 @@ class SignupController extends \Core\Controller
             View::renderTemplate('Signup/new.html', [
                 'user' => $user
             ]);
-
         }
     }
 

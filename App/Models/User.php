@@ -17,22 +17,95 @@ class User extends \Core\Model
         };
     }
 
+    public function getUserId ()
+    {
+        $sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $this->id = $stmt->fetchAll();
+
+        foreach ($this->id as $id) {
+            $_SESSION['userId'] = (string)$id['id'];
+        }
+    }
+
+    public function loadIncomeCategories ()
+    {
+        $db = static::getDB();
+        $sql = "SELECT incomes_category_default.name FROM mich1988_finm.incomes_category_default";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $this->incomeCategories = $stmt->fetchAll();
+
+        $userId = $_SESSION['userId'] + 1;
+        $db = static::getDB();
+        foreach ($this->incomeCategories as $category) {
+            $category1 = $category['name'];
+            $sql = " INSERT INTO mich1988_finm.incomes_category_assigned_to_users(incomes_category_assigned_to_users.id,incomes_category_assigned_to_users.user_id,incomes_category_assigned_to_users.name) values (null,'$userId','$category1')";
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        }
+    }
+
+    public function loadExpenseCategories ()
+    {
+        $db = static::getDB();
+        $sql = "SELECT expenses_category_default.name FROM mich1988_finm.expenses_category_default";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $this->expenseCategories = $stmt->fetchAll();
+
+        $userId = $_SESSION['userId'] + 1;
+        $db = static::getDB();
+        foreach ($this->expenseCategories as $category) {
+            $category1 = $category['name'];
+            $sql = "INSERT INTO mich1988_finm.expenses_category_assigned_to_users(expenses_category_assigned_to_users.id,expenses_category_assigned_to_users.user_id,expenses_category_assigned_to_users.name) values (null,'$userId','$category1')";
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        }
+    }
+
+    public function loadExpensePaymentMethods ()
+    {
+        $db = static::getDB();
+        $sql = "SELECT payment_methods_default.name FROM mich1988_finm.payment_methods_default";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $this->expensePaymentMethodsCategory = $stmt->fetchAll();
+
+        $userId = $_SESSION['userId'] + 1;
+        $db = static::getDB();
+
+        foreach ($this->expensePaymentMethodsCategory as $category) {
+            $category1 = $category['name'];
+            $sql = "INSERT INTO mich1988_finm.payment_methods_assigned_to_users(payment_methods_assigned_to_users.id,payment_methods_assigned_to_users.user_id,payment_methods_assigned_to_users.name) values (null,'$userId','$category1')";
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        }
+    }
+
     public function save ()
     {
         $this->validate();
+        $this->getUserId();
+        $this->loadIncomeCategories();
+        $this->loadExpenseCategories();
+        $this->loadExpensePaymentMethods();
 
         if (empty($this->errors)) {
 
             $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
 
-            $sql = 'INSERT INTO users (name, email, password_hash)
-                    VALUES (:name, :email, :password_hash)';
+            $sql = 'INSERT INTO users ( login, password_hash)
+                    VALUES ( :login, :password_hash)';
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
-            $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
+
+            $stmt->bindValue(':login', $this->login, PDO::PARAM_STR);
             $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
 
             return $stmt->execute();
@@ -43,17 +116,13 @@ class User extends \Core\Model
 
     public function validate ()
     {
-        // Name
-        if ($this->name == '') {
-            $this->errors[] = 'Name is required';
-        }
 
-        // email address
-        if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
-            $this->errors[] = 'Invalid email';
+
+        if (filter_var($this->login, FILTER_VALIDATE_EMAIL) === false) {
+            $this->errors[] = 'Invalid login.';
         }
-        if (static::emailExists($this->email)) {
-            $this->errors[] = 'email already taken';
+        if (static::loginExists($this->login)) {
+            $this->errors[] = 'login already taken';
         }
 
         // Password
@@ -70,18 +139,18 @@ class User extends \Core\Model
         }
     }
 
-    public static function emailExists ($email)
+    public static function loginExists ($login)
     {
-        return static::findByEmail($email) !== false;
+        return static::findByLogin($login) !== false;
     }
 
-    public static function findByEmail ($email)
+    public static function findByLogin ($login)
     {
-        $sql = 'SELECT * FROM users WHERE email = :email';
+        $sql = 'SELECT * FROM users WHERE login = :login';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+        $stmt->bindValue(':login', $login, PDO::PARAM_STR);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
@@ -90,9 +159,9 @@ class User extends \Core\Model
         return $stmt->fetch();
     }
 
-    public static function authenticate ($email, $password)
+    public static function authenticate ($login, $password)
     {
-        $user = static::findByEmail($email);
+        $user = static::findByLogin($login);
         $_SESSION['userId'] = $user->id;
 
         if ($user) {

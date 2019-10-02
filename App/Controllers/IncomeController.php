@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\Income;
-
+use \App\Flash;
 
 class IncomeController extends \Core\Controller
 {
@@ -23,7 +23,7 @@ class IncomeController extends \Core\Controller
         $income = new Income($_POST);
 
         if ($income->save()) {
-
+            Flash::addMessage('Income added successfully');
             $this->redirect('/Income');
 
         } else {
