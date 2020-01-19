@@ -29,9 +29,8 @@ class ExpenseController extends \Core\Controller
         $expense = new Expense($_POST);
 
         if ($expense->save()) {
-            View::renderTemplate('/Balance/Balance.html', ['expense' => $expense]);
             Flash::addMessage('Expense added successfully');
-
+            $this->redirect('/Expense');
         } else {
             echo 'error';
         }
