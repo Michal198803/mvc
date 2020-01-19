@@ -25,10 +25,29 @@ class Expense extends \Core\Model
         return $stmt->execute(['user_id' => $_SESSION['userId'], 'amount' => $this->amount, 'date_of_expense' => $this->date, 'expense_category_assigned_to_user_id' => $this->category, 'expense_comment' => $this->comment, 'payment_method_assigned_to_user_id' => $this->payment]);
     }
 
+    public function update ()
+    {
+        $sql = " UPDATE expenses SET expense_category_assigned_to_user_id=:category,payment_method_assigned_to_user_id=:payment,amount=:amount, date_of_expense =:date,expense_comment =:comment WHERE id =:id ";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        return $stmt->execute(['category' => $this->categoryId, 'payment' => $this->paymentId, 'amount' => $this->amount, 'date' => $this->date, 'comment' => $this->comment, 'id' => $this->id]);
+    }
+
+    public function delete ()
+    {
+        $sql = "DELETE FROM expenses WHERE id = :id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        return $stmt->execute(['id' => $this->id]);
+    }
+
+
     public function preloadCategories ()
     {
         $id = $_SESSION['userId'];
-        $query = "SELECT * FROM expenses_category_assigned_to_users WHERE user_id = '$id ' ";
+        $query = "SELECT * FROM expenses_category_assigned_to_users WHERE user_id = '$id ' ORDER BY name  ASC";
 
         $db = static::getDB();
         $stmt = $db->prepare($query);
@@ -41,7 +60,7 @@ class Expense extends \Core\Model
     public function preloadPaymentMethods ()
     {
         $id = $_SESSION['userId'];
-        $query = "SELECT * FROM payment_methods_assigned_to_users WHERE user_id = '$id ' ";
+        $query = "SELECT * FROM payment_methods_assigned_to_users WHERE user_id = '$id ' ORDER BY name ASC";
 
         $db = static::getDB();
         $stmt = $db->prepare($query);

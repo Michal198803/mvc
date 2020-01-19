@@ -31,4 +31,33 @@ class IncomeController extends \Core\Controller
             echo 'error';
         }
     }
+
+    public function updateAction ()
+    {
+
+        $income = new Income($_POST);
+
+        if ($income->update()) {
+            Flash::addMessage('Income updated successfully');
+            //    $this->redirect('/Balance');
+        } else {
+
+            echo 'error';
+        }
+    }
+
+    public function deleteAction ()
+    {
+
+        $income = new Income($_POST);
+
+        if ($income->delete()) {
+            Flash::addMessage('Income deleted successfully');
+            //  $this->redirect('/Expense');
+        } else {
+
+            echo 'error';
+        }
+    }
+
 }

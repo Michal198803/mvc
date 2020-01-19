@@ -15,6 +15,23 @@ $.validator.addMethod('validPassword',
     'Must contain at least one letter and one number'
 );
 
+
+$(document).ready(function () {
+    $('#loginName').validate({
+        rules: {
+
+            required: true,
+            email: true,
+            remote: '/account/validate-email'
+        },
+        messages: {
+            remote: 'login already taken'
+        }
+    })
+})
+
+
+
 $(document).ready(function () {
 
     /**

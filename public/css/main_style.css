@@ -6,6 +6,20 @@
     outline: 0;
 }
 
+.LimitWarningMessage {
+    display: none;
+}
+
+.labelLimit {
+    width: 100%;
+}
+
+.limitInfo {
+    font-size: 60%;
+    padding-left: 13%;
+    width: 20%;
+    display: inline-block
+}
 body {
     font-size: calc(8px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
 }

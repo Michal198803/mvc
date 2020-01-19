@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
+
+
 {% block css %}
 <link rel="stylesheet" href="css/main_style.css"/>{% endblock %}
+{% block addScript %}
+<script src="../js/expenseLimit.js"></script>{% endblock %}
+
 {% block userActions %}
 {% if current_user %}
 <li><a href="home">Home</a></li>
@@ -18,7 +23,24 @@
 
 <div class="content_add" style="padding-left: 15px ; padding-right: 15px">
     <form method="post" action="addExpense">
-
+        <div class="LimitWarningMessage">
+            <div class="limitInfo">
+                <label class="labelLimit">Limit</label>
+                <p id="limitValue1">007</p>
+            </div>
+            <div class="limitInfo">
+                <label>Limit used</label>
+                <p id="limitValue2"></p>
+            </div>
+            <div class="limitInfo">
+                <label class="labelLimit">Over limit</label>
+                <pi id="limitValue3"></pi>
+            </div>
+            <div class="limitInfo">
+                <label class="labelLimit">New expense</label>
+                <p id="limitValue4"></p>
+            </div>
+        </div>
         <div class="form-group">
             <label>
                 Amount:
@@ -39,7 +61,9 @@
             <select name="payment">
 
                 {% for methods in expense.paymentMethods %}
-                <option type="number" value={{ methods.id}}>{{ methods.name}}</option>
+                <p>
+                    <option type="number" value={{ methods.id}}>{{ methods.name}}</option>
+                </p>
                 {% endfor %}
 
             </select>
@@ -50,7 +74,7 @@
             </label>
             <select name="category">
                 {% for category in expense.categories %}
-                <option type="number" value={{ category.id}}>{{ category.name}}</option>
+                <option name="category" type="number" value={{ category.id}} selected>{{ category.name}}</option>
                 {% endfor %}
             </select>
         </div>

@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 {% block css %}
 <link rel="stylesheet" href="css/main_style.css"/>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" src="js/donutChart.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/formManipulation.js"></script>
+<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
 
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css"/>
 
 {% endblock %}
 
@@ -24,7 +31,6 @@
 </div>
 
 <div class="container">
-
     <div class="row">
 
         <form method="POST" action="show">
@@ -53,6 +59,112 @@
         <script type="text/javascript" src="js/formManipulation.js"></script>
 
     </div>
+    <!-- Modal -->
+    <div id="myModalExpense" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Update your expense</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Amount: </label>
+                        <input type="text" id="amountExpense" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Category:
+                        </label>
+                        <select id="categoryExpense">
+                            {% for category in balance.expensesCategories %}
+                            <option type="number" value="{{ category.id}}">{{ category.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Payment method: </label>
+                        <select id="paymentExpense">
+
+                            {% for methods in balance.paymentMethods %}
+                            <option type="number" value="{{ methods.id}}">{{ methods.name}}</option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date: </label>
+                        <input type="date" id="dateExpense" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Comment: </label>
+                        <input type="text" id="commentExpense" class="form-control">
+                    </div>
+                    <input type="hidden" id="rowId" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveExpense" class="btn btn-primary pull-right">Save</button>
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModalIncome" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Update your expense</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Amount: </label>
+                        <input type="text" id="amountIncome" class="form-control">
+                    </div>
+                    <div class="form-check">
+                        <label>
+                            Category:
+                        </label>
+
+                        {% for category in balance.incomeCategories %}
+                        <input name='type' data-target="categoryIncomeId" id='incomeCategory' type="radio"
+                               value="{{ category.id}}">{{ category.name}}</input>
+                        {% endfor %}
+
+                    </div>
+                    <div class="form-group">
+                        <label>Date: </label>
+                        <input type="date" id="incomeDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Comment: </label>
+                        <input type="text" id="incomeComment" class="form-control">
+                    </div>
+                    <input type="hidden" id="rowId" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveIncome" class="btn btn-primary pull-right">Save</button>
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="action_alert" title="Action">
+
+    </div>
+
+    <div id="delete_confirmation" title="Confirmation">
+    </div>
+
     <div class="row">
         <div class="col-md-6 col-lg-6" style="padding-top: 25px; float: left; width: 100% ">
             <table class="table" id="tableIncomes">
@@ -61,13 +173,26 @@
                     <th>Category</th>
                     <th>Date</th>
                     <th>Comment</th>
+                    <th>Update</th>
+                    <th>Delete</th>
                 </tr>
                 {% for income in balance.incomes %}
-                <tr>
-                    <td>{{income.amount}}</td>
-                    <td>{{income.name}}</td>
-                    <td>{{income.date_of_income}}</td>
-                    <td>{{income.income_comment}}</td>
+                <tr id="{{income.id}}">
+                    <td data-target="amountIncome" width="20%">{{income.amount}}</td>
+                    <td data-target="categoryIncome" width="20%">{{income.name}}</td>
+                    <td hidden data-target="categoryIncomeId" width="20%">{{income.categoryId}}</td>
+                    <td data-target="dateIncome" width="25%">{{income.date_of_income}}</td>
+                    <td data-target="commentIncome" width="25%">{{income.income_comment}}</td>
+                    <td width="5%">
+                        <button type="button" data-role="updateIncome" name="edit" class="btn btn-primary btn-xs edit"
+                                data-id={{income.id}}>Edit
+                        </button>
+                    </td>
+                    <td width="5%">
+                        <button type="button" data-role="deleteIncome" name="delete"
+                                class="btn btn-danger btn-xs delete" data-id={{income.id}}>Delete
+                        </button>
+                    </td>
                 </tr>
                 {% endfor %}
             </table>
@@ -89,14 +214,28 @@
                     <th>Date</th>
                     <th>Category</th>
                     <th>Comment</th>
+                    <th>Update</th>
+                    <th>Delete</th>
                 </tr>
                 {% for expense in balance.expenses %}
-                <tr>
-                    <td>{{expense.amount}}</td>
-                    <td>{{expense.name}}</td>
-                    <td>{{expense.date_of_expense}}</td>
-                    <td>{{expense.name2}}</td>
-                    <td>{{expense.expense_comment}}</td>
+                <tr id="{{expense.id}}">
+                    <td data-target="amount" width="20%">{{expense.amount}}</td>
+                    <td data-target="payment" width="20%">{{expense.name}}</td>
+                    <td hidden data-target="paymentId" width="20%">{{expense.paymentId}}</td>
+                    <td data-target="date" width="20%">{{expense.date_of_expense}}</td>
+                    <td data-target="category" width="20%">{{expense.name2}}</td>
+                    <td hidden data-target="categoryId" width="20%">{{expense.categoryId}}</td>
+                    <td data-target="comment" width="10%">{{expense.expense_comment}}</td>
+                    <td width="5%">
+                        <button type="button" data-role="updateExpense" name="edit" class="btn btn-primary btn-xs edit"
+                                data-id={{expense.id}}>Edit
+                        </button>
+                    </td>
+                    <td width="5%">
+                        <button type="button" data-role="deleteExpense" name="delete"
+                                class="btn btn-danger btn-xs delete" data-id={{expense.id}}>Delete
+                        </button>
+                    </td>
                 </tr>
                 {% endfor %}
             </table>
@@ -117,5 +256,6 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src="js/balanceChange.js"></script>
 
 {% endblock %}

@@ -26,11 +26,29 @@ class Income extends \Core\Model
         return $stmt->execute(['user_id' => $_SESSION['userId'], 'amount' => $this->amount, 'date_of_income' => $this->date, 'income_category_assigned_to_user_id' => $this->category, 'income_comment' => $this->comment]);
     }
 
+    public function update ()
+    {
+        $sql = " UPDATE incomes SET income_category_assigned_to_user_id=:category,amount=:amount, date_of_income =:date,income_comment =:comment WHERE id =:id ";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        return $stmt->execute(['category' => $this->categoryId, 'amount' => $this->amount, 'date' => $this->date, 'comment' => $this->comment, 'id' => $this->id]);
+    }
+
+    public function delete ()
+    {
+        $sql = "DELETE FROM incomes WHERE id = :id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        return $stmt->execute(['id' => $this->id]);
+    }
+
     public function preloadCategory ()
     {
         $id = $_SESSION['userId'];
 
-        $query = "SELECT * FROM incomes_category_assigned_to_users WHERE user_id = '$id ' ";
+        $query = "SELECT * FROM incomes_category_assigned_to_users WHERE user_id = '$id ' ORDER BY name ASC";
 
         $db = static::getDB();
         $stmt = $db->prepare($query);

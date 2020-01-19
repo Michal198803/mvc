@@ -16,25 +16,23 @@
         <div class="col-lg-6" style="padding-top: 10px; padding-right: 30px; padding-left: 27px ">
             <div id="login" style="width: 100%;height: 100%">
                 <form method="post" action="signupNew" id="formSignup">
-                    <input id="name" name="login" placeholder="Login (email format)" value="{{ user.login }}" required
+                    <input id="name" name="login" placeholder="Login (email format)" value="{{ user.login }}"
                            type="email"/>
-                    <input type="password" id="inputPassword" name="password" placeholder="Password" required/>
+                    <input type="password" id="inputPassword" name="password" placeholder="Password"/>
                     <input type="submit" value="Sign me up">
                     <input type="button" value="I have account" onclick="window.location.href='../Login'"/>
                 </form>
             </div>
         </div>
+        <div class="alert alert-warning">
+            {% for error in user.errors %}
+
+            {{ error }}
+
+            {% endfor %}
+        </div>
     </div>
 
-    {% if user.errors is not empty %}
-
-
-    {% for error in user.errors %}
-    <div class="alert alert-warning">
-        {{ error }}
-    </div>
-    {% endfor %}
-    {% endif %}
 
 </div>
 {% endblock %}

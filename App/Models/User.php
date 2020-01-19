@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use PDO;
-
+use App\Models\View;
 
 class User extends \Core\Model
 {
@@ -15,6 +15,7 @@ class User extends \Core\Model
         foreach ($data as $key => $value) {
             $this->$key = $value;
         };
+
     }
 
     public function getUserId ()
@@ -34,7 +35,7 @@ class User extends \Core\Model
     public function loadIncomeCategories ()
     {
         $db = static::getDB();
-        $sql = "SELECT incomes_category_default.name FROM mich1988_finm.incomes_category_default";
+        $sql = "SELECT incomes_category_default.name FROM mich1988_finm.incomes_category_default ";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $this->incomeCategories = $stmt->fetchAll();
@@ -52,7 +53,7 @@ class User extends \Core\Model
     public function loadExpenseCategories ()
     {
         $db = static::getDB();
-        $sql = "SELECT expenses_category_default.name FROM mich1988_finm.expenses_category_default";
+        $sql = "SELECT expenses_category_default.name FROM mich1988_finm.expenses_category_default ";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $this->expenseCategories = $stmt->fetchAll();
@@ -70,7 +71,7 @@ class User extends \Core\Model
     public function loadExpensePaymentMethods ()
     {
         $db = static::getDB();
-        $sql = "SELECT payment_methods_default.name FROM mich1988_finm.payment_methods_default";
+        $sql = "SELECT payment_methods_default.name FROM mich1988_finm.payment_methods_default ";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $this->expensePaymentMethodsCategory = $stmt->fetchAll();
@@ -187,4 +188,66 @@ class User extends \Core\Model
 
         return $stmt->fetch();
     }
+
+    public function loadUserInformation ()
+    {
+        $this->userId = $_SESSION['userId'];
+
+        $query = "SELECT id,login FROM users WHERE id = '$this->userId' ";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        $this->userInfo = $stmt->fetchAll();
+
+        return $this->userInfo;
+    }
+
+    public function updatePassword ()
+    {
+
+        if (strlen($this->password) < 6) {
+            $this->errors[] = 'Please enter at least 6 characters for the password';
+        }
+
+        if (preg_match('/.*[a-z]+.*/i', $this->password) == 0) {
+            $this->errors[] = 'Password needs at least one letter';
+        }
+
+        if (preg_match('/.*\d+.*/i', $this->password) == 0) {
+            $this->errors[] = 'Password needs at least one number';
+        }
+        if (empty($this->errors)) {
+            $this->password_hash = password_hash($this->password, PASSWORD_DEFAULT);
+            $this->userId = $_SESSION['userId'];
+            $sql = " UPDATE users SET password_hash =:password_hash WHERE id =:id ";
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            return $stmt->execute(['id' => $this->userId, 'password_hash' => $this->password_hash]);
+        }
+        return var_dump($this->errors);
+    }
+
+    public function updateLogin ()
+    {
+        $this->userId = $_SESSION['userId'];
+
+        if (filter_var($this->login, FILTER_VALIDATE_EMAIL) === false) {
+            $this->error = 'Invalid login.';
+        }
+        if (static::loginExists($this->login)) {
+            $this->error = 'login already taken';
+        }
+
+        if (empty($this->error)) {
+            $sql = " UPDATE users SET login =:login WHERE id =:id ";
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            return $stmt->execute(['id' => $this->userId, 'login' => $this->login]);
+        }
+        return var_dump($this->errors);
+    }
+
 }

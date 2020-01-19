@@ -5,12 +5,15 @@ namespace App\Controllers;
 use \Core\View;
 use \App\Models\Balance;
 
+
 class BalanceController extends \Core\Controller
 {
 
 
     public function newAction ()
     {
+
+
         View::renderTemplate('/Balance/Balance.html');
     }
 
@@ -20,12 +23,10 @@ class BalanceController extends \Core\Controller
         $_SESSION['period'] = $balance->period;
         $balance->getDate();
         $balance->loadIncomes();
-        $balance->loadExpence();
-
-
+        $balance->loadExpense();
         View::renderTemplate('/Balance/Balance.html', ['balance' => $balance]);
-
     }
+
 
     public function toJsonAction ()
     {
@@ -33,7 +34,7 @@ class BalanceController extends \Core\Controller
 
         $balance->loadPeriod();
         $balance->getDate();
-        $balance->loadExpence();
+        $balance->loadExpense();
         return print $balance->expensesCategoryNumber;
     }
 }

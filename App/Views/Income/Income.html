@@ -35,7 +35,7 @@
 
             {% if income.categories is not empty %}
             {% for category in income.categories %}
-            <input type="radio" name="category" value={{ category.id}}><label
+            <input type="radio" name="category" value={{ category.id}} checked><label
                 style="padding: 10px; font-weight: 100 ">{{ category.name}}</label>
             {% endfor %}
             {% else %}
