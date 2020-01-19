@@ -1,0 +1,115 @@
+{% extends 'SetupBase.html' %}
+{% block addScript %}
+<script src="../js/validateRemoveExpenseCategory.js"></script>
+
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div name="addNew">
+        <button type="button" class="newI" data-role="addExpenseCategory" name="addNew">Add new</button>
+    </div>
+    <!-- Modal -->
+    <div id="myModalExpenseCategory" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Expense category</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <form id="loginForm" action="" method="">
+                            <label>Name: </label>
+                            <input type="text" id="expenseCategoryName" class="form-control">
+                            <span id="availability"></span>
+                            <input type="checkbox" class="checkbox" id="limit" value="limit">Initial monthly limit<br>
+                            <input type="number" id="expenseLimit" placeholder='Set here limit in PLN'
+                                   class="form-control">
+                        </form>
+                    </div>
+                    <input type="hidden" id="rowId" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveExpenseCategory" class="btn btn-primary pull-right">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModalValidateRemoveExpenseCategory" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content" id="expenseCategoryContent">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 id="expenseCategoryModalTitle" class="modal-title">Change category in below expenses before
+                        remove</h4>
+
+                    <select hidden id="expenseCategoryModalRemoveValidate">
+                        {% for category in category.expenseCategories %}
+                        <option name="category" type="number" value={{ category.id}} selected>{{ category.name}}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                </div>
+                <div class="modal-body" id='tableCategoryExpenseValidateModal'>
+                    <table class="table" id="tableCategoryExpensesValidate">
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-lg-6" id="expenseCategoryTable" style="padding-top: 25px; float: left; width: 100% ">
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+            {% for category in category.expenseCategories %}
+            <tr id="{{category.id}}">
+                {% if category.expense_limit %}
+                <td data-target="expenseCategoryName" width="20%"><p name="expenseName">{{category.name}}</p>
+                    <p name="expenseLimitTable">Limit: {{category.expense_limit}}</p></td>
+                {% else %}
+                <td data-target="expenseCategoryName" width="20%"><p name="expenseName">{{category.name}}</p>
+                    {{category.expense_limit}}
+                </td>
+                {% endif %}
+                <td hidden data-target="expenseCategoryId" width="20%">{{category.id}}</td>
+                <td width="5%">
+                    <button type="button" data-role="updateExpenseCategory" name="edit"
+                            class="btn btn-primary btn-xs edit" data-id={{category.id}}>Edit
+                    </button>
+                </td>
+                <td width="5%">
+                    <button type="button" data-role="deleteExpenseCategory" name="delete"
+                            class="btn btn-danger btn-xs delete" data-id={{category.id}}>Delete
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% for message in flash_messages %}
+        <div id="flash" class="alert alert-{{ message.type }}">
+            {{ message.body }}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+

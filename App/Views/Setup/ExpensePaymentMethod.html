@@ -1,0 +1,99 @@
+{% extends 'SetupBase.html' %}
+{% block content %}
+<script src="../js/validateRemoveExpensePaymentMethod.js"></script>
+
+<div class="container">
+    <div name="addNew">
+        <button type="button" class="newI" data-role="addExpensePaymentMethod" name="addNew">Add new</button>
+    </div>
+    <!-- Modal -->
+    <div id="myModalExpensePaymentMethod" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Payment method</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <form id="loginForm" action="" method="">
+                            <label>Name: </label>
+                            <input type="text" id="paymentMethodName" class="form-control">
+                            <span id="availability"></span>
+                        </form>
+
+                    </div>
+                    <input type="hidden" id="rowId" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="savePaymentMethod" class="btn btn-primary pull-right">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModalValidateRemoveExpensePaymentMethod" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content" id="expensePaymentMethodContent">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 id="expensePaymentMethodModalTitle" class="modal-title">Change category in below incomes before
+                        remove</h4>
+                    <select hidden id="expensePaymentMethodModalRemoveValidate">
+                        {% for payment in payment.paymentMethods %}
+                        <option name="category" type="number" value={{ payment.id}} selected>{{ payment.name}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-body" id='tableExpensePaymentMethodValidateModal'>
+                    <table class="table" id="tableExpensePaymentMethodsValidate">
+                    </table>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-lg-6" id="expensePaymentMethodTable" style="padding-top: 25px; float: left; width: 100% ">
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+            {% for payment in payment.paymentMethods %}
+            <tr id="{{payment.id}}">
+                <td hidden data-target="expensePaymentMethodId" width="20%">{{payment.id}}</td>
+                <td data-target="expensePaymentMethodName" width="20%"><p name="expensePaymentMethodName">
+                    {{payment.name}}</p>
+                <td width="5%">
+                    <button type="button" data-role="updateExpensePaymentMethod" name="edit"
+                            class="btn btn-primary btn-xs edit" data-id={{payment.id}}>Edit
+                    </button>
+                </td>
+                <td width="5%">
+                    <button type="button" data-role="deleteExpensePaymentMethod" name="delete"
+                            class="btn btn-danger btn-xs delete" data-id={{payment.id}}>Delete
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% for message in flash_messages %}
+        <div id="flash" class="alert alert-{{ message.type }}">
+            {{ message.body }}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
