@@ -163,8 +163,10 @@ class User extends \Core\Model
     public static function authenticate ($login, $password)
     {
         $user = static::findByLogin($login);
-        $_SESSION['userId'] = $user->id;
-        var_dump($user);
+
+        if (isset($user->id)) {
+            $_SESSION['userId'] = $user->id;
+        }
         if ($user) {
             if (password_verify($password, $user->password_hash)) {
                 return $user;
