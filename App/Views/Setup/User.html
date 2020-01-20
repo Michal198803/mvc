@@ -3,7 +3,7 @@
 
 <script src="js/hideShowPassword.min.js"></script>
 <script src="js/validation.js"></script>
-<script type="text/javascript" src="../js/loginChanges.js"></script>
+<script type="text/javascript" src="../js/loginUpdate.js"></script>
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -19,12 +19,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <pre>
-New login must be in the form of an email,
-but it does not have to be a real email address.
-                        </pre>
                         <label>Login: </label>
                         <input type="email" id="loginName" class="form-control">
+                        <span id="availability"></span>
                     </div>
                     <input type="hidden" id="rowId" class="form-control">
                 </div>

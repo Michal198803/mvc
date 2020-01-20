@@ -35,6 +35,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $(document).on('click', 'button[data-role=updateExpenseCategory]', function () {
+        $('#availability').hide();
         var id = $(this).data('id');
         var name = $('#' + id).children('td[data-target=expenseCategoryName]').children('p[name=expenseName]').text();
         var expenseLmit = $('#' + id).children('td[data-target=expenseCategoryName]').children('p[name=expenseLimitTable]').text();
@@ -102,11 +103,11 @@ $(document).ready(function () {
             data: {name: name},
             success: function (data) {
                 if (data != '0') {
-                    $('#availability').html('<span class="text-danger">Category name not available</span>');
+                    $('#availability').html('<span class="text-danger">Category name not available</span>').show();
                     $('#saveExpenseCategory').attr("disabled", true);
                 }
                 else {
-                    $('#availability').html('<span class="text-success">Category name available</span>');
+                    $('#availability').html('<span class="text-success">Category name available</span>').show();
                     $('#saveExpenseCategory').attr("disabled", false);
                 }
             }

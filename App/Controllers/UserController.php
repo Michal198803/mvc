@@ -47,4 +47,12 @@ class UserController extends \Core\Controller
         }
     }
 
+    public function checkUserNameAvailabilityAction ()
+    {
+        $user = new User($_POST);
+
+        $user->nameAvailability();
+        echo count($user->rowCount);
+    }
+
 }

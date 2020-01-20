@@ -1,6 +1,6 @@
 $(document).ready(function () {
-
     $(document).on('click', 'button[data-role=changeLogin]', function () {
+        $('#availability').hide();
         var id = $(this).data('id');
         var name = $('th[data-target=login]').text();
 
@@ -59,6 +59,28 @@ $(document).ready(function () {
 
                 }
             })
+        });
+    });
+});
+$(document).ready(function () {
+    $('#loginName').blur(function () {
+        var name = $(this).val();
+
+        $.ajax({
+            url: '../login_availability_check',
+            method: 'post',
+            data: {name: name},
+            success: function (data) {
+                console.log(data);
+                if (data != '0') {
+                    $('#availability').html('<span class="text-danger">User name not available</span>').show();
+                    $('#saveLogin').attr("disabled", true);
+                }
+                else {
+                    $('#availability').html('<span class="text-success">User name available</span>').show();
+                    $('#saveLogin').attr("disabled", false);
+                }
+            }
         });
     });
 });

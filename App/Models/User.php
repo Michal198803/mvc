@@ -164,14 +164,16 @@ class User extends \Core\Model
     {
         $user = static::findByLogin($login);
         $_SESSION['userId'] = $user->id;
-
+        var_dump($user);
         if ($user) {
             if (password_verify($password, $user->password_hash)) {
                 return $user;
             }
+        } else {
+            return;
         }
 
-        return false;
+        return;
     }
 
     public static function findByID ($id)
@@ -248,6 +250,16 @@ class User extends \Core\Model
             return $stmt->execute(['id' => $this->userId, 'login' => $this->login]);
         }
         return var_dump($this->errors);
+    }
+
+    public function nameAvailability ()
+    {
+        $query = "SELECT * FROM users WHERE LOWER(login) = LOWER(:name)";
+        $db = static::getDB();
+        $stmt = $db->prepare($query);
+        $stmt->execute(['name' => $this->name]);
+        $this->rowCount = $stmt->fetchAll();
+        return $this->rowCount;
     }
 
 }

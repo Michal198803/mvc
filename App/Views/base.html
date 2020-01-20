@@ -62,7 +62,7 @@
 </div>
 
 {% endblock %}
-<div class="container">
+<div class="container" style="padding-top: 10px">
     {% for message in flash_messages %}
     <div class="alert alert-{{ message.type }}">
         {{ message.body }}
